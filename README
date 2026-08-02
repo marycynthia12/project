@@ -1,0 +1,127 @@
+ShopNaija AWS Infrastructure Project
+Architecture Overview
+For this project, I was tasked with designing and deploying a scalable and secure AWS infrastructure for ShopNaija, a growing Nigerian e-commerce startup. The company initially hosted its application on a single VPS, but as the number of users increased, they began experiencing frequent downtime, slow performance, poor security practices, lack of monitoring, and difficulty scaling during high-traffic periods.
+To solve these challenges, I designed and provisioned a cloud infrastructure on AWS using Terraform. The architecture includes a custom VPC with public and private subnets, an Application Load Balancer to distribute incoming traffic, EC2 instances managed by an Auto Scaling Group, a private Amazon RDS database, Amazon S3 for file storage, AWS Lambda for automation tasks, CloudWatch for monitoring, and IAM for access control.
+The overall design follows AWS best practices by emphasizing security, scalability, high availability, disaster recovery, and cost optimization.
+
+AWS Services Used and Why I Chose Them
+Amazon VPC:
+I used a custom VPC to provide a secure and isolated network environment for all resources deployed in AWS.
+Public Subnets:
+The public subnets host internet-facing resources such as the Application Load Balancer and NAT Gateway, allowing users to access the application securely.
+Private Subnets:
+The private subnets host sensitive resources such as EC2 instances and the RDS database. This helps reduce exposure to external threats.
+Internet Gateway:
+The Internet Gateway enables communication between resources in the VPC and the internet.
+NAT Gateway:
+The NAT Gateway allows resources in private subnets to access the internet when necessary, such as for software updates, without making them publicly accessible.
+Cloudfront:
+CloudFront helps deliver website content faster by caching it at AWS edge locations closer to users. This reduces latency, improves website performance during high traffic periods, and decreases the workload on backend resources.
+Application Load Balancer (ALB):
+The ALB distributes incoming traffic across multiple EC2 instances, ensuring better availability and improved application performance.
+Amazon EC2:
+EC2 instances provide the compute resources required to host the ShopNaija application.
+Auto Scaling Group:
+Auto Scaling automatically adjusts the number of EC2 instances based on traffic demand, helping maintain performance while controlling costs.
+Amazon RDS:
+Amazon RDS provides a managed relational database service with automated backups, security features, and high availability options.
+Amazon S3:
+S3 is used for storing product images and user-uploaded files because it is durable, scalable, and cost-effective.
+AWS Lambda:
+Lambda was included to automate specific tasks without requiring additional servers. In this project, it can be used to process files uploaded to S3.
+Amazon CloudWatch:
+CloudWatch helps monitor infrastructure performance and generates alerts when predefined thresholds are exceeded.
+AWS IAM:
+IAM was used to create roles and permissions that follow the principle of least privilege, ensuring resources only have access to what they need.
+API Gateway:
+API Gateway provides a secure way to expose Lambda functions through REST APIs.
+GitHub Actions:
+GitHub Actions was chosen to automate the deployment process and support Infrastructure as Code practices.
+Security Considerations:
+Security was a major consideration throughout the design and deployment process. To improve the security posture of the environment:
+The RDS database was deployed only within private subnets.
+Security Groups were configured to allow only necessary traffic.
+IAM roles and policies were implemented using the principle of least privilege.
+No AWS credentials or sensitive information were hardcoded in the Terraform files.
+EC2 instances access AWS services through IAM roles instead of embedded credentials.
+The database was not exposed to the public internet.
+Infrastructure deployment was managed through Terraform to ensure consistency and reduce configuration drift.
+HTTPS can be implemented on the load balancer to secure communication between users and the application.
+
+Estimated Monthly Cost
+The estimated monthly cost of the infrastructure depends on usage levels and the AWS region selected. For a small to medium-scale deployment, the approximate costs are:
+Service	Estimated Monthly Cost
+EC2 Instances	$8 – $15
+Application Load Balancer	$16 – $25
+NAT Gateway	$30 – $35
+Amazon RDS	$15 – $25
+Amazon S3	$1 – $5
+CloudWatch	$1 – $5
+Lambda	Minimal / Free Tier
+API Gateway	Minimal / Free Tier
+Estimated Total Cost: Approximately $70–$110 per month.
+
+Setup Instructions
+Before deploying the infrastructure, the following tools must be installed:
+Terraform
+AWS CLI
+Git
+Configure AWS Credentials
+Run:
+aws configure
+Then provide:
+AWS Access Key ID
+AWS Secret Access Key
+Default Region
+Initialize Terraform
+Terraform Commands Used
+terraform init
+terraform fmt
+Terraform fmt -recursive
+terraform validate
+terraform plan
+terraform apply
+terraform destroy
+Deployment Guide
+Step 1: Initialize Terraform
+terraform init
+Step 2: Format Terraform Files
+terraform fmt
+Step 3: Validate the Configuration
+terraform validate
+Expected output:
+Success! The configuration is valid.
+Step 4: Generate the Execution Plan
+terraform plan
+Expected output:
+Plan: 55 to add, 0 to change, 0 to destroy.
+Step 5: Deploy the Infrastructure
+terraform apply
+Type:
+yes
+when prompted to confirm deployment.
+Step 6: Verify Resources
+After deployment, verify that all resources were successfully created by checking the AWS Management Console.
+Cost Optimization Strategy
+To keep cloud costs under control, several optimization techniques were incorporated into the design:
+Auto Scaling ensures resources are only used when needed.
+Small instance types were selected where appropriate.
+S3 Lifecycle Policies help reduce storage costs by moving older files to cheaper storage classes.
+S3 Versioning protects important files from accidental deletion.
+CloudWatch monitoring helps identify underutilized resources.
+Terraform allows infrastructure to be recreated when necessary, reducing long-term operational overhead.
+Disaster Recovery Strategy
+To improve resilience and recoverability, the following measures were implemented:
+Automated backups were enabled for the RDS database.
+S3 Versioning was enabled to preserve previous file versions.
+Infrastructure was defined using Terraform, allowing the entire environment to be recreated if necessary.
+Resources were deployed across multiple subnets to improve availability.
+Challenges Encountered
+During this project, I encountered several challenges while building and validating the Terraform configuration.
+One major challenge was resolving module dependencies and ensuring outputs from one module were correctly passed as inputs to another. I also experienced issues with resource naming, IAM role configurations, security group references, and VPC integration.
+Another challenge involved packaging Lambda functions and ensuring Terraform could locate the correct source files. There were also configuration conflicts involving CloudFront, Route 53, Auto Scaling Groups, and subnet assignments.
+These issues were gradually resolved through debugging, reviewing Terraform documentation, validating configurations, and restructuring module variables and outputs.
+Lessons Learned
+This project gave me practical experience in designing and deploying cloud infrastructure using Terraform and AWS services.
+I learned the importance of proper Terraform module design and how outputs and variables enable communication between modules. I also gained a better understanding of IAM role management, networking concepts such as VPCs and subnets, and the role of monitoring services like CloudWatch.
+Most importantly, I learned that Infrastructure as Code makes cloud deployments more consistent, repeatable, and easier to manage. The project also reinforced the importance of security, automation, scalability, and disaster recovery when designing production-ready cloud environments.
