@@ -66,7 +66,7 @@ module "s3" {
 }
 
 module "security" {
-  source      = "./module/security"
+  source      = "./module/Security"
   vpc_id      = module.Networking.vpc_id
   ec2_sg_name = "ec2-sg"
   rds_sg_name = "rds-sg"
