@@ -1,0 +1,26 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+
+# Terraform plans
+*.tfplan
+
+# AWS credentials
+*.pem
+*.key
+
+# Environment variables
+.env
+
+# Lambda build artifacts
+*.zip
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
